@@ -1,3 +1,4 @@
+import Filter from "@/components/share/Filter";
 import LocalSearchBar from "@/components/share/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -22,7 +23,7 @@ export default function Home() {
             placeholder="search for questions"
             otherClasses="flex-1"
         />  
-        filter
+        <Filter/>
       </div>
     </>
   );
