@@ -4,57 +4,57 @@ import React from "react";
 import RenderTag from "./RenderTag";
 const topques = [
   {
-    _id: 1,
+    _id: '1',
     title: "Redux Toolkit Not Updating State as Expected",
   },
 
   {
-    _id: 2,
+    _id: '2',
     title:
       "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
   },
   {
-    _id: 3,
+    _id: '3',
     title: "How to Perfectly Center a Div with Tailwind CSS?",
   },
   {
-    _id: 4,
+    _id: '4',
     title:
       "How do ES6 module exports and imports work in JavaScript, and what are the key differences from CommonJS?",
   },
   {
-    _id: 5,
+    _id: '5',
     title: "Next.js Redirect from / to another page",
   },
   {
-    _id: 6,
+    _id: '6',
     title: "Node.js Vs Bun | Which one is better for creating APIs?",
   },
 ];
 
 const tags = [
   {
-    _id: 1,
+    _id: '1',
     name: "javascript",
     totalQuestions: 5,
   },
   {
-    _id: 2,
+    _id: '2',
     name: "react",
     totalQuestions: 3,
   },
   {
-    _id: 3,
+    _id: '3',
     name: "nextjs",
     totalQuestions: 5,
   },
   {
-    _id: 4,
+    _id: '4',
     name: "typescript",
     totalQuestions: 2,
   },
   {
-    _id: 5,
+    _id: '5',
     name: "redux",
     totalQuestions: 5,
   },
