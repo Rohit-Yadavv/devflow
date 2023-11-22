@@ -5,35 +5,13 @@ import NoResult from "@/components/share/NoResult";
 import LocalSearchBar from "@/components/share/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const question = [
-  {
-    _id: 1,
-    title: "Redux Toolkit Not Updating State as Expected",
-    tags: [
-      { _id: 1, name: "pyton" },
-      { _id: 2, name: "sql" },
-    ],
-    author:  { _id: 1, name: "rohit" ,picture:'rohit.jpg'},
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2023-02-01T12:00:00.000Z"),
-  },
-  {
-    _id: 2,
-    title: "Async/Await Function Not Handling Errors Properly",
-    tags: [{ _id: 1, name: "javascript" }],
-    author:  { _id: 1, name: "rohit" ,picture:'rohit.jpg'},
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2023-02-01T12:00:00.000Z"),
-  },
-];
+export default async function Home() {
+  const result = await getQuestions({});
+  console.log(result.questions);
 
-export default function Home() {
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -60,29 +38,32 @@ export default function Home() {
       </div>
       <HomeFilters />
       <div className="mt-10 flex w-full flex-col gap-6">
-        {question.length > 0
-          ? question.map((question) => (
-          <QuestionCard 
-          key = {question._id}
-          _id = {question._id}
-          title = {question.title}
-          tags = {question.tags}
-          author = {question.author}
-          upvotes = {question.upvotes}
-          views = {question.views}
-          answers = {question.answers}
-          createdAt = {question.createdAt}
-          />
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
+            <> 
+              <QuestionCard
+                key={question._id}
+                _id={question._id}
+                title={question.title}
+                tags={question.tags}
+                author={question.author}
+                upvotes={question.upvotes}
+                views={question.views}
+                answers={question.answers}
+                createdAt={question.createdAt}
+              />
+            </>
           ))
-          : <NoResult
-          title="There are no question to show"
-          desc="Be the first to break the silence! 🚀 Ask a Question and kickstart the
+        ) : (
+          <NoResult
+            title="There are no question to show"
+            desc="Be the first to break the silence! 🚀 Ask a Question and kickstart the
           discussion. our query could be the next big thing others learn from. Get
           involved! 💡"
-          link="/ask-question"
-          linkTitle="Ask a Question"
+            link="/ask-question"
+            linkTitle="Ask a Question"
           />
-          }
+        )}
       </div>
     </>
   );

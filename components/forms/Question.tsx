@@ -19,10 +19,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createQuestion } from "@/lib/actions/question.action";
+import { usePathname, useRouter } from "next/navigation";
 
 const type: any = "create";
 
-const Question = () => {
+const Question = ({ mongoUserId }: { mongoUserId: string }) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof QuestionsSchema>>({
@@ -37,15 +40,19 @@ const Question = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
-    try{
-        await createQuestion({
-          title:values.title,
-          explanation:values.explanation,
-          tags:values.tags,
-          author:values.tags,
-        })
-    }catch(error){
-        console.log(error)
+    try {
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+        path:pathname,
+      });
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -132,7 +139,7 @@ const Question = () => {
                     editorRef.current = editor;
                   }}
                   onBlur={field.onBlur}
-                  onEditorChange={(content)=>field.onChange(content)}
+                  onEditorChange={(content) => field.onChange(content)}
                   initialValue=" "
                   init={{
                     height: 350,
@@ -159,7 +166,7 @@ const Question = () => {
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist",
                     content_style: "body { font-family:Inter; font-size:16px }",
-                  }} 
+                  }}
                 />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500 ">
@@ -186,8 +193,8 @@ const Question = () => {
               <FormControl className="mt-3.5">
                 <>
                   <Input
-                    className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border" 
-                    placeholder="Add Tags..." 
+                    className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
+                    placeholder="Add Tags..."
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
                   />
                   {field.value.length > 0 && (

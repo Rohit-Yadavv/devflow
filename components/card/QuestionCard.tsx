@@ -52,12 +52,11 @@ const QuestionCard = ({
           <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
         ))}
       </div>
-      <div className="flex-between mt-6 w-full flex-wrap gap-3 ">
-
+      <div className="flex-between mt-6 w-full flex-wrap gap-3 "> 
         <Metric imgUrl='/assets/icons/avatar.svg' 
         alt='user'
-        value={author.name}
-        href={`/profile/${author._id}`}
+        value={author[0].name}
+        href={`/profile/${author[0]._id}`}
         
         title={`-asked ${getTimeStamp(createdAt)}`}
         textStyle="body-medium text text-dark400_light700"
