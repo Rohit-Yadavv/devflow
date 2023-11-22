@@ -38,7 +38,12 @@ const Question = () => {
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try{
-        await createQuestion({})
+        await createQuestion({
+          title:values.title,
+          explanation:values.explanation,
+          tags:values.tags,
+          author:values.tags,
+        })
     }catch(error){
         console.log(error)
     }
