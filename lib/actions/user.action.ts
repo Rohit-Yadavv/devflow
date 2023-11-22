@@ -8,7 +8,7 @@ import {
   UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
-import path from "path";
+// import path from "path";
 import Question from "@/database/question.model";
 
 export async function getUserById(params: any) {
@@ -57,9 +57,9 @@ export async function deleteUser(params: DeleteUserParams) {
       throw new Error("User Not found");
     }
     // get user questions ids
-    const userQuestionIds = await Question.find({ author: user._id }).distinct(
-      "_id"
-    );
+    // const userQuestionIds = await Question.find({ author: user._id }).distinct(
+    //   "_id"
+    // );
 
     // delete user question
     await Question.deleteMany({ author: user._id });
