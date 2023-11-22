@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { title } from "process";
+import Link from "next/link"; 
 import React from "react";
 
 interface MetricProps {
@@ -18,8 +17,7 @@ const Metric = ({
   value,
   title,
   href,
-  textStyle,
-  isAuthor,
+  textStyle, 
 }: MetricProps) => {
   const metricContent = (
     <>
