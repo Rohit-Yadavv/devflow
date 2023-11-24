@@ -132,7 +132,7 @@
     @apply text-[10px] font-normal leading-[13px];
   }
   .placeholder {
-    @apply placeholder:text-light-400 dark:placeholder:text-slate-400 ;
+    @apply placeholder:text-light-400 dark:placeholder:text-slate-400;
   }
   .invert-colors {
     @apply invert dark:invert-0;
@@ -141,7 +141,13 @@
     @apply shadow-light-100 dark:shadow-dark-100;
   }
   .shadow-light100_darknone {
-    @apply shadow-light-100 dark:shadow-none;
+    /* @apply shadow--100 dark:shadow-none; */
+    --tw-shadow: 0px 12px 20px 0px hsla(0, 0%, 72%, 0.03),
+      0px 6px 12px 0px hsla(0, 0%, 72%, 0.02),
+      0px 2px 4px 0px hsla(0, 0%, 72%, 0.03);
+    --tw-shadow-colored: 0px 12px 20px 0px var(--tw-shadow-color),
+      0px 6px 12px 0px var(--tw-shadow-color),
+      0px 2px 4px 0px var(--tw-shadow-color);
   }
   .primary-gradient {
     background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);

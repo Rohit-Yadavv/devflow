@@ -25,7 +25,7 @@ const UserSchema = new Schema({
   picture: { type: String, required: true },
   location: { type: String }, // This line can also be { type: String | undefined }
   portfolioWebsite: { type: String },
-  reputation: { type: Number, default:0 },
+  reputation: { type: Number, default: 0 },
   saved: [{ type: Schema.Types.ObjectId, ref: "Question" }],
   joinedAt: { type: Date, default: Date.now },
 });
