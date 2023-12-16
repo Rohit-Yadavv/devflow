@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/form";
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
-import { useTheme } from "@/context/ThemeProvider";
 import { toast } from "../ui/use-toast";
+// import { useTheme } from "@/context/ThemeProvider";
 
 interface Props {
   type?: string;
@@ -78,7 +78,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
         title:"Question Posted", 
         description: "Your question has been posted successfully"
       })
-    } catch (error) {
+    } catch (error) { 
       console.log(error);
     } finally {
       setIsSubmitting(false);
