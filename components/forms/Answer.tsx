@@ -13,8 +13,7 @@ import {
 } from "../ui/form";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
-import { Button } from "../ui/button";
-import Image from "next/image";
+import { Button } from "../ui/button"; 
 import { createAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation"; 
 import { toast } from "../ui/use-toast";
@@ -27,8 +26,7 @@ interface Props {
 
 const Answer = ({ question, questionId, authorId }: Props) => {
   const pathName = usePathname();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmittingAi, setIsSubmittingAi] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const { mode } = useTheme();
 
   const editorRef = useRef(null);
@@ -64,23 +62,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
       setIsSubmitting(false);
     }
   };
-
-  const generateAiAnswer =async()=>{
-    if(!authorId) return;
-    setIsSubmittingAi(true);
-    try {
-       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,{
-        method:'POST',
-        body:JSON.stringify({question})
-       })
-       const aiAnswer = await response.json();
-       alert(aiAnswer.reply)
-    } catch (error) {
-      console.log(error)
-    }finally{
-      setIsSubmitting(false)
-    }
-  }
+ 
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
