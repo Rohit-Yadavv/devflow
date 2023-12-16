@@ -1,4 +1,7 @@
+import { BADGE_CRITERIA } from "@/constants";
+import { BadgeCounts } from "@/types";
 import { type ClassValue, clsx } from "clsx";
+import qs from "query-string";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -53,12 +56,93 @@ export const formatNumber = (num: number): string => {
   if (absNum < 1000) {
     return num.toString();
   } else if (absNum < 1e6) {
-    return (num / 1e3).toFixed(1) + 'k';
+    return (num / 1e3).toFixed(1) + "k";
   } else if (absNum < 1e9) {
-    return (num / 1e6).toFixed(1) + 'm';
+    return (num / 1e6).toFixed(1) + "m";
   } else if (absNum < 1e12) {
-    return (num / 1e9).toFixed(1) + 'b';
+    return (num / 1e9).toFixed(1) + "b";
   } else {
-    return (num / 1e12).toFixed(1) + 't';
+    return (num / 1e12).toFixed(1) + "t";
   }
+};
+
+export const getJoinedDate = (date: Date): string => {
+  // Get the month and year from the Date object
+  const month = date.toLocaleString("en-US", { month: "long" });
+  const year = date.getFullYear();
+
+  // Join the month and year
+  const joinedDate = `${month} ${year}`;
+
+  return joinedDate;
+};
+
+interface UrlQueryParams {
+  params: string;
+  key: string;
+  value: string | null;
+}
+
+export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
+  const currentUrl = qs.parse(params);
+  currentUrl[key] = value;
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  );
+};
+
+interface RemoveUrlQueryParams {
+  params: string;
+  keysToRemove: string[];
+}
+
+export const removeKeysFromQuery = ({
+  params,
+  keysToRemove,
+}: RemoveUrlQueryParams) => {
+  const currentUrl = qs.parse(params);
+
+  keysToRemove.forEach((key) => {
+    delete currentUrl[key];
+  });
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  );
+};
+
+interface BadgeParams {
+  criteria: {
+    type: keyof typeof BADGE_CRITERIA;
+    count:number;
+  }[];
+}
+
+export const assignBadges = (params: BadgeParams) => {
+  const badgeCounts: BadgeCounts = {
+    GOLD: 0,
+    SILVER: 0,
+    BRONZE: 0,
+  };
+  const { criteria } = params;
+  criteria.forEach((item) => {
+    const { type, count } = item;
+    console.log(item)
+    const badgeLevels:any = BADGE_CRITERIA[type];
+
+    Object.keys(badgeLevels).forEach((level:any) => {
+      if (count >= badgeLevels[level]) {
+        badgeCounts[level as keyof BadgeCounts] += 1;
+      }
+    });
+  });
+  return badgeCounts;
 };

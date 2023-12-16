@@ -3,6 +3,8 @@ import React from "react";
 import RenderTag from "../share/RenderTag";
 import Metric from "../share/Metric";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../share/EditDeleteAction";
 
 interface Props {
   key: number;
@@ -16,14 +18,17 @@ interface Props {
     _id: string;
     name: string;
     picture: string;
+    clerkId:string;
   };
-  upvotes: number;
+  upvotes: string[];
   views: number;
   answers: Array<object>;
   createdAt: Date;
+  clerkId?:string | null;
 }
 const QuestionCard = ({
   key,
+  clerkId,
   _id,
   title,
   tags,
@@ -32,8 +37,8 @@ const QuestionCard = ({
   views,
   answers,
   createdAt,
-}: Props) => {
-  console.log(views);
+}: Props) => { 
+  const showActionButtons = clerkId && clerkId===author.clerkId;  
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -47,6 +52,18 @@ const QuestionCard = ({
             </h3>
           </Link>
         </div>
+
+        <SignedIn>
+          {
+            showActionButtons &&(
+              <EditDeleteAction
+                type="Question"
+                itemId = {JSON.stringify(_id)}
+              /> 
+            )
+          }
+        </SignedIn>
+
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
@@ -62,11 +79,11 @@ const QuestionCard = ({
           title={`- asked ${getTimeStamp(createdAt)}`}
           textStyle="body-medium text text-dark400_light700"
         />
-
+        <div className="max:sm:flex-wrap max:sm:justify-start flex items-center gap-3">
         <Metric
           imgUrl="/assets/icons/like.svg"
           alt="upvotes"
-          value={formatNumber(upvotes)}
+          value={formatNumber(upvotes.length)}
           title="votes"
           textStyle="small-medium-text text-dark400_light800"
         />
@@ -85,6 +102,7 @@ const QuestionCard = ({
           title="views"
           textStyle="small-medium-text text-dark400_light800"
         />
+      </div>
       </div>
     </div>
   );

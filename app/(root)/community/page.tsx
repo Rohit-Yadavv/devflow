@@ -1,13 +1,21 @@
 import UserCard from "@/components/card/UserCard";
 import Filter from "@/components/share/Filter";
+import Pagination from "@/components/share/Pagination";
 import LocalSearchBar from "@/components/share/search/LocalSearchBar";
 import { UserFilters } from "@/constants/filters";
 import { getAllUser } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
-import React from "react";
-
-const page = async () => {
-  const result = await getAllUser({});
+import React from "react"; 
+  
+const page = async ({searchParams}:SearchParamsProps) => {
+ 
+  const result = await getAllUser({
+    searchQuery:searchParams.q,
+    filter:searchParams.filter,
+    page:searchParams.page ? +searchParams.page:1,
+  }); 
+ 
 
   return (
     <>
@@ -37,6 +45,12 @@ const page = async () => {
           </div>
         )}
       </section>
+      <div className="mt-10">
+        <Pagination 
+          pageNumber={searchParams?.page?+searchParams.page:1}
+          isNext={result.isNext}
+        />
+      </div>
     </>
   );
 };

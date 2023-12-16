@@ -2,15 +2,49 @@ import QuestionCard from "@/components/card/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import Filter from "@/components/share/Filter";
 import NoResult from "@/components/share/NoResult";
+import Pagination from "@/components/share/Pagination";
 import LocalSearchBar from "@/components/share/search/LocalSearchBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
+import { SearchParamsProps } from "@/types";
+import { auth } from "@clerk/nextjs";
+import { Metadata } from "next";
 import Link from "next/link";
 
-export default async function Home() {
-  const result = await getQuestions({});
- 
+export const metadata: Metadata = {
+  title: "Home | Web Overflow",
+  description:
+    "A community driven platform for asking and answeing programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
+};
+
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const { userId } = auth();
+  let result;
+  if (searchParams?.filter === "recommended") {
+    if (userId) {
+      result = await getRecommendedQuestions({
+        userId,
+        searchQuery: searchParams.q,
+        page: searchParams.page ? +searchParams.page : 1,
+      });
+    } else {
+      result = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else {
+    result = await getQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? +searchParams.page : 1,
+    });
+  }
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -63,6 +97,12 @@ export default async function Home() {
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );

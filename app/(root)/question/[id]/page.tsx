@@ -2,7 +2,8 @@ import Answer from "@/components/forms/Answer";
 import AllAnswers from "@/components/share/AllAnswers";
 import Metric from "@/components/share/Metric";
 import ParseHTML from "@/components/share/ParseHTML";
-import RenderTag from "@/components/share/RenderTag"; 
+import RenderTag from "@/components/share/RenderTag";
+import Votes from "@/components/share/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
@@ -11,8 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const page = async ({ params }: { params: { id: string } }) => {
-  console.log(params)
+const page = async ({ params,searchParams }: any) => {
   const { userId: clerkId } = auth();
   let mongoUser;
   if (clerkId) {
@@ -31,7 +31,7 @@ const page = async ({ params }: { params: { id: string } }) => {
             <Image
               width={22}
               height={22}
-              src={result.author.picture} 
+              src={result.author.picture}
               alt="profile"
               className="rounded-full"
             />
@@ -39,7 +39,18 @@ const page = async ({ params }: { params: { id: string } }) => {
               {result.author.name}
             </p>
           </Link>
-          <div className="flex justify-end">VOTING</div>
+          <div className="flex justify-end">
+            <Votes
+              type="Question"
+              itemId={JSON.stringify(result._id)}
+              userId={JSON.stringify(mongoUser._id)}
+              upvotes={result.upvotes.length}
+              hasupVoted={result.upvotes.includes(mongoUser._id)}
+              downvotes={result.downvotes.length}
+              hasdownVoted={result.downvotes.includes(mongoUser._id)}
+              hasSaved={mongoUser?.saved.includes(result._id)}
+            />
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {result.title}
@@ -72,7 +83,7 @@ const page = async ({ params }: { params: { id: string } }) => {
       </div>
       <ParseHTML data={result.content} />
       <div className="mt-8 flex flex-wrap gap-2">
-        {result.tags.map((tag:any) => (
+        {result.tags.map((tag: any) => (
           <RenderTag
             key={tag._id}
             _id={tag._id}
@@ -81,11 +92,13 @@ const page = async ({ params }: { params: { id: string } }) => {
           />
         ))}
       </div>
-       <AllAnswers
+      <AllAnswers
         questionId={result._id}
-        userId={JSON.stringify(mongoUser._id)}
+        userId={mongoUser._id}
         totalAnswers={result.answers.length}
-      />  
+        page={searchParams?.page}
+        filter={searchParams?.filter}
+      />
       <Answer
         question={result.content}
         questionId={JSON.stringify(result._id)}
