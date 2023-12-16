@@ -11,8 +11,8 @@ const Navbar = () => {
     <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12">
       <Link href="/" className="flex items-center gap-1">
         <Image
-          width={23}
-          height={23}
+          width={33}
+          height={33}
           alt="WebOverflow"
           src="/assets/images/site-logo.svg"
         />

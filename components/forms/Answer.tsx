@@ -40,6 +40,12 @@ const Answer = ({ question, questionId, authorId }: Props) => {
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     setIsSubmitting(true);
     try {
+      if(!authorId){
+        return toast({
+          title:'Login to Answer', 
+          description: "Login to your account to give answer "
+        })
+      }
       await createAnswer({
         content: values.answer,
         author: JSON.parse(authorId),
