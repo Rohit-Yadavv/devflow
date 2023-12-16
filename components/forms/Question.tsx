@@ -21,7 +21,7 @@ import {
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
-// import { useTheme } from "@/context/ThemeProvider";
+import { useTheme } from "@/context/ThemeProvider";
 
 interface Props {
   type?: string;
@@ -30,14 +30,15 @@ interface Props {
 }
 
 const Question = ({ type, mongoUserId, questionDetails }: Props) => {
-  // const { mode } = useTheme();
+  const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-  const parsedQuestionDetails = questionDetails && JSON.parse(questionDetails || "");
-  const groupedTags = parsedQuestionDetails?.tags?.map((tag:any) => tag.name);
+  const parsedQuestionDetails =
+    questionDetails && JSON.parse(questionDetails || "");
+  const groupedTags = parsedQuestionDetails?.tags?.map((tag: any) => tag.name);
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
@@ -55,15 +56,15 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
       if (type === "Edit") {
         router.push(`/question/${parsedQuestionDetails._id}`);
         await editQuestion({
-          questionId:parsedQuestionDetails?._id,
-          title:values.title,
-          content:values.explanation,
-          path:pathname,
-         });
-         return toast({
-          title:"Question Edited", 
-          description: "Your question has been edited successfully"
-        })
+          questionId: parsedQuestionDetails?._id,
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+        });
+        return toast({
+          title: "Question Edited",
+          description: "Your question has been edited successfully",
+        });
       } else {
         await createQuestion({
           title: values.title,
@@ -71,14 +72,14 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
           tags: values.tags,
           author: JSON.parse(mongoUserId),
           path: pathname,
-        }); 
+        });
         router.push("/");
       }
       toast({
-        title:"Question Posted", 
-        description: "Your question has been posted successfully"
-      })
-    } catch (error) { 
+        title: "Question Posted",
+        description: "Your question has been posted successfully",
+      });
+    } catch (error) {
       console.log(error);
     } finally {
       setIsSubmitting(false);
@@ -195,6 +196,8 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist",
                     content_style: "body { font-family:Inter; font-size:16px }",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light",
                   }}
                 />
               </FormControl>
@@ -233,10 +236,14 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                         <Badge
                           key={tag}
                           className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
-                          onClick={() => type !== "Edit" ? handleTagRemove(tag, field) : ()=>{}}
+                          onClick={() =>
+                            type !== "Edit"
+                              ? handleTagRemove(tag, field)
+                              : () => {}
+                          }
                         >
                           {tag}
-                           { type !== "Edit" && (
+                          {type !== "Edit" && (
                             <Image
                               src="/assets/icons/close.svg"
                               width={12}
