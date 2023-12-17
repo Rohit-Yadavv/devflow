@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   description:
     "A community driven platform for asking and answeing programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more. ",
   icons: {
-    icon: "/assets/images/site-logo.svg",
+    icon: "/assets/images/full-logo.svg",
   },
 };
 
