@@ -13,10 +13,11 @@ import {
 } from "../ui/form";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
-import { Button } from "../ui/button"; 
+import { Button } from "../ui/button";
 import { createAnswer } from "@/lib/actions/answer.action";
-import { usePathname } from "next/navigation"; 
+import { usePathname } from "next/navigation";
 import { toast } from "../ui/use-toast";
+import Image from "next/image";
 
 interface Props {
   question: string;
@@ -26,7 +27,8 @@ interface Props {
 
 const Answer = ({ question, questionId, authorId }: Props) => {
   const pathName = usePathname();
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const { mode } = useTheme();
 
   const editorRef = useRef(null);
@@ -40,11 +42,11 @@ const Answer = ({ question, questionId, authorId }: Props) => {
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     setIsSubmitting(true);
     try {
-      if(!authorId){
+      if (!authorId) {
         return toast({
-          title:'Login to Answer', 
-          description: "Login to your account to give answer "
-        })
+          title: "Login to Answer",
+          description: "Login to your account to give answer ",
+        });
       }
       await createAnswer({
         content: values.answer,
@@ -53,41 +55,70 @@ const Answer = ({ question, questionId, authorId }: Props) => {
         path: pathName,
       });
       form.reset();
-      if(editorRef.current){
+      if (editorRef.current) {
         const editor = editorRef.current as any;
-        editor.setContent('')
+        editor.setContent("");
       }
       return toast({
-        title:'Answer Posted', 
-        description: "Your Answer has successfully Posted"
-      })
+        title: "Answer Posted",
+        description: "Your Answer has successfully Posted",
+      });
     } catch (error) {
       console.log(error);
       throw error;
-    } finally { 
+    } finally {
       setIsSubmitting(false);
     }
   };
- 
+  const generateAiAnswer = async () => {
+    if (!authorId) return;
+    setIsSubmittingAI(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemini`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question }),
+        }
+      );
+      const aiAnswer = await res.json();
+      const formattedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(formattedAnswer);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmittingAI(false);
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <h4 className="paragraph-semibold text-dark400_light800">
           Write Your Answer here
         </h4>
-        {/* <Button
+        <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500"
           onClick={generateAiAnswer}
         >
-          <Image
-            src="/assets/icons/stars.svg"
-            alt="star"
-            width={12}
-            height={12}
-            className="object-contain"
-          />
-          Generate AI Answer
-        </Button> */}
+          {isSubmittingAI ? (
+            <>Generating</>
+          ) : (
+            <> 
+              <Image
+                src="/assets/icons/stars.svg"
+                alt="star"
+                width={12}
+                height={12}
+                className="object-contain"
+              />
+              Generate AI Answer
+            </>
+          )}
+        </Button>
       </div>
       <Form {...form}>
         <form
