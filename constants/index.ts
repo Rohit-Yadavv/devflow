@@ -26,6 +26,11 @@ export const sidebarLinks: SidebarLink[] = [
   //   route: "/jobs",
   //   label: "Find Jobs",
   // },
+  // {
+  //   imgURL: "/assets/icons/O(n).svg",
+  //   route: "/complexity-calc",
+  //   label: "Complexity Calc",
+  // },
   {
     imgURL: "/assets/icons/tag.svg",
     route: "/tags",
@@ -35,7 +40,7 @@ export const sidebarLinks: SidebarLink[] = [
     imgURL: "/assets/icons/user.svg",
     route: "/profile",
     label: "Profile",
-  },
+  }, 
   {
     imgURL: "/assets/icons/question.svg",
     route: "/ask-question",

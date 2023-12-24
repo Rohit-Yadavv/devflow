@@ -71,17 +71,24 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     }
   };
   const generateAiAnswer = async () => {
-    if (!authorId) return;
+    if (!authorId) {
+      return toast({
+        title: "Login to Generate",
+        description: "Login to your account to Generate AI Answer ",
+      });
+    }
     setIsSubmittingAI(true);
     try {
+      console.log("first");
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemini`,
         {
           method: "POST",
-          body: JSON.stringify({ question }),
+          body: JSON.stringify({ question, type: "question" }),
         }
       );
-      const aiAnswer = await res.json(); 
+      const aiAnswer = await res.json();
+      console.log(aiAnswer);
       const formattedAnswer = aiAnswer?.reply.replace(/\n/g, "<br />");
       if (editorRef.current) {
         const editor = editorRef.current as any;
@@ -107,7 +114,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
           {isSubmittingAI ? (
             <>Generating</>
           ) : (
-            <> 
+            <>
               <Image
                 src="/assets/icons/stars.svg"
                 alt="star"
