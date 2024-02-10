@@ -1,5 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
+// IAnswer is interface name and it is related to some db or document 
 export interface IAnswer extends Document {
   author: Schema.Types.ObjectId;
   question: Schema.Types.ObjectId;
